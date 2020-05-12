@@ -3,26 +3,40 @@
 package main
 
 import (
-	"fmt"
 	"syscall/js"
 )
 
 func main() {
 
-	fmt.Printf("main() function here\n")
+	println("main() function here")
 
 	ch := make(chan bool, 10)
 
 	fn := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		fmt.Printf("got to callback function\n")
+		println("got to callback function")
 		ch <- true
-		fmt.Printf("successfully pushed a bool onto the channel\n")
+		println("successfully pushed a bool onto the channel")
 		return nil
 	})
 	js.Global().Get("window").Call("setCallback", fn)
 
 	for v := range ch {
-		fmt.Printf("got value from ch: %t\n", v)
+		println("got value from ch", v)
 	}
 
 }
+
+// func main() {
+// 	ch := make(chan bool)
+// 	js.Global().Call("setTimeout", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+// 		go func() {
+// 			println("sending")
+// 			ch <- true
+// 			println("sent")
+// 		}()
+// 		return nil
+// 	}), 2000)
+// 	println("waiting")
+// 	<-ch
+// 	println("done")
+// }

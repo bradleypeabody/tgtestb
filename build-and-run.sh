@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "Compiling wasm with tinygo..."
 tinygo build -o main.wasm -target=wasm main_wasm.go
 
